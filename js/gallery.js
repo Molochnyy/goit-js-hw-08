@@ -67,7 +67,6 @@ const images = [
 ];
 
 
-
 const gallery = document.querySelector(".gallery");
 
 const markup = images.reduce((html, image) => {
