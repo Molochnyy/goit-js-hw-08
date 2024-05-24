@@ -1,5 +1,3 @@
-"use strict"
-
 const images = [
     {
         preview:
@@ -67,36 +65,39 @@ const images = [
 ];
 
 
-const gallery = document.querySelector(".gallery");
-
-const markup = images.reduce((html, image) => {
-    return html + `<li class="gallery-item">
-  <a class="gallery-link" href="${image.original}">
-    <img
-      class="gallery-image"
-      src="${image.preview}"
-      data-source="${image.original}"
-      alt="${image.description}"
-    />
-  </a>
-</li>
-`
-}, "")
-
-
-gallery.insertAdjacentHTML("beforeend", markup);
-
-gallery.addEventListener("click", onImageClick);
-console.log(basicLightbox);
-
-function onImageClick(event) {
+const galleryList = document.querySelector(".gallery");
+galleryList.addEventListener("click", (event) => {
     event.preventDefault();
-    const listImage = event.target.closest(".gallery-image");
-    const originalImageSrc = listImage.dataset.source;
-    const originalImageAlt = listImage.alt;
-    const instance = basicLightbox.create(`
-    <img src="${originalImageSrc}" alt="${originalImageAlt}" width="1112" height="640">
-`)
 
-    instance.show()
-}
+    if (event.target === event.currentTarget) return;
+    const largeImgSrc = event.target.dataset.soure;
+
+    const modal = basicLightbox.create(`
+	<div class="modal">
+  <img data-soure="${largeImgSrc}" class="modal" src="${largeImgSrc}" alt="${event.target.getAttribute("alt")}">
+  </div>
+`)
+    modal.show();
+});
+
+
+const elements = images.map(image => {
+    const listItem = document.createElement("li");
+    listItem.classList.add("gallery-item");
+
+    const itemLink = document.createElement("a");
+    itemLink.classList.add("gallery-link");
+    itemLink.href = image.original;
+    listItem.append(itemLink);
+
+    const itemImage = document.createElement("img");
+    itemImage.classList.add("gallery-image");
+    itemImage.dataset.soure = image.original;
+    itemImage.src = image.preview;
+    itemImage.alt = image.description;
+    itemLink.append(itemImage);
+
+    return listItem;
+});
+
+galleryList.append(...elements);
