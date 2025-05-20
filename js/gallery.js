@@ -69,12 +69,12 @@ const ulElem = document.querySelector(".gallery");
 
 function imageTemplate({ preview, original, description }) {
     return `<li class="gallery-item">
-    <a class="gallery-link" href=${original}>
+    <a class="gallery-link" href="${original}">
         <img
             class="gallery-image"
-            src= ${preview}
-            data-source=${original}
-            alt=${description}
+            src= "${preview}"
+            data-source="${original}"
+            alt="${description}"
         />
     </a>
 </li>`;
@@ -112,11 +112,10 @@ ulElem.addEventListener('click', (e) => {
     if (e.target.nodeName !== 'IMG') {
         return;
     };
-    const x = e.target.closest('IMG');
-    const y = x.dataset.source;
-    const z = images.find(el => el.source = y);
-    console.log(z);
-    openModal(z);
+    const elem = e.target.closest('IMG');
+    const data = elem.dataset.source;
+    const img = images.find(el => el.original === data);
+    openModal(img);
 })
 
 
