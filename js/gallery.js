@@ -5,7 +5,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820_1280.jpg',
         description: 'Hokkaido Flower',
-        id: 1,
     },
     {
         preview:
@@ -13,7 +12,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/14/22/05/container-4203677_1280.jpg',
         description: 'Container Haulage Freight',
-        id: 2,
     },
     {
         preview:
@@ -21,7 +19,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/16/09/47/beach-4206785_1280.jpg',
         description: 'Aerial Beach View',
-        id: 3,
     },
     {
         preview:
@@ -29,7 +26,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2016/11/18/16/19/flowers-1835619_1280.jpg',
         description: 'Flower Blooms',
-        id: 4,
     },
     {
         preview:
@@ -37,7 +33,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2018/09/13/10/36/mountains-3674334_1280.jpg',
         description: 'Alpine Mountains',
-        id: 5,
     },
     {
         preview:
@@ -45,7 +40,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/16/23/04/landscape-4208571_1280.jpg',
         description: 'Mountain Lake Sailing',
-        id: 6,
     },
     {
         preview:
@@ -53,7 +47,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/17/09/27/the-alps-4209272_1280.jpg',
         description: 'Alpine Spring Meadows',
-        id: 7,
     },
     {
         preview:
@@ -61,7 +54,6 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/16/21/10/landscape-4208255_1280.jpg',
         description: 'Nature Landscape',
-        id: 8,
     },
     {
         preview:
@@ -69,22 +61,20 @@ const images = [
         original:
             'https://cdn.pixabay.com/photo/2019/05/17/04/35/lighthouse-4208843_1280.jpg',
         description: 'Lighthouse Coast Sea',
-        id: 9,
     },
 ];
 
 //////////////////////////////MARCUP//////////////////////////////////////////////////////////////////
 const ulElem = document.querySelector(".gallery");
 
-function imageTemplate(img) {
+function imageTemplate({ preview, original, description }) {
     return `<li class="gallery-item">
-    <a class="gallery-link" href=${img.original}>
+    <a class="gallery-link" href=${original}>
         <img
             class="gallery-image"
-            src= ${img.preview}
-            data-source=${img.original}
-            data-id = ${img.id}
-            alt=${img.description}
+            src= ${preview}
+            data-source=${original}
+            alt=${description}
         />
     </a>
 </li>`;
@@ -94,46 +84,89 @@ function imagesTemplate(imgs) {
     return imgs.map(imageTemplate).join('\n');
 };
 
-const galleryMarkup = imagesTemplate(images);
+function galleryMarkup() {
+    const markup = imagesTemplate(images);
+    ulElem.innerHTML = markup;
+};
 
-ulElem.insertAdjacentHTML('beforeend', galleryMarkup);
+galleryMarkup();
 
 //////////////////////MODAL///////////////////////////////////////////////////////////////////////////
-let instance;
-
-function openModal(img) {
-    // img.preventDefault();
-    instance = basicLightbox.create(`
+function openModal(picture) {
+    const instance = basicLightbox.create(`
         <div class="modal">
-           <img src=${img.original} alt=${img.description} >
+            <img src="${picture.original}" alt="${picture.description}">
         </div>
-    `);
+    `)
 
     instance.show();
-
-    document.addEventListener('keydown', handleCloseModal);
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape') {
+            instance.close();
+        }
+    });
 };
 
-function closeModal() {
-    instance.close();
-    document.removeEventListener('keydown', handleCloseModal);
-};
-
-function handleCloseModal(e) {
-    if (e.code === 'Escape') {
-        closeModal();
-    };
-};
-
-// const galleryItem = document.querySelector('.gallery-item');
 ulElem.addEventListener('click', (e) => {
     e.preventDefault();
-    if (e.target === e.currentTarget) {
+    if (e.target.nodeName !== 'IMG') {
         return;
     };
-    const elem = e.target.closest('li');
-    const id = elem.dataset.id;
-    const img = images.find(el => el.id === id);
-    openModal(img);
-    // console.log(elem);
-});
+    const x = e.target.closest('IMG');
+    const y = x.dataset.source;
+    const z = images.find(el => el.source = y);
+    console.log(z);
+    openModal(z);
+})
+
+
+
+
+
+
+
+
+
+
+
+// let instance;
+
+// function openModal(img) {
+//     console.log(img);
+//     // img.preventDefault();
+//     instance = basicLightbox.create(`
+//         <div class="modal">
+//            <img src=${img.original} alt=${img.description} >
+//         </div>
+//     `);
+
+//     instance.show();
+
+//     // document.addEventListener('keydown', handleCloseModal);
+// };
+
+// openModal(images);
+
+// function closeModal() {
+//     instance.close();
+//     document.removeEventListener('keydown', handleCloseModal);
+// };
+
+// function handleCloseModal(e) {
+//     if (e.code === 'Escape') {
+//         closeModal();
+//     };
+// };
+
+// const galleryItem = document.querySelector('.gallery-item');
+// ulElem.addEventListener('click', (e) => {
+//     e.preventDefault();
+//     if (event.target.nodeName === 'IMG') {
+//         return;
+//     };
+//     const elem = e.target.closest('IMG');
+//     const data = elem.dataset.source;
+//     const img = images.find(el => el.data === source);
+//     openModal(img);
+//     // console.log(elem);
+// });
